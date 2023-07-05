@@ -15,9 +15,12 @@ import java.util.Optional;
 @RequestMapping("/books")
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
+    @Autowired
+    public BookController(BookService bookService){
+        this.bookService = bookService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Book>> getAll() {
@@ -114,7 +117,7 @@ public class BookController {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Book> upDate(@PathVariable Long id, @RequestBody Book book) {
+    public ResponseEntity<Book> update(@PathVariable Long id, @RequestBody Book book) {
         Optional<Book> optionalBook = Optional.ofNullable(bookService.update(id, book));
         if (optionalBook.isPresent()) {
             return ResponseEntity.ok(optionalBook.get());
