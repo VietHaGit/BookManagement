@@ -16,9 +16,8 @@ import java.util.Optional;
 public class BookController {
 
     private final BookService bookService;
-
     @Autowired
-    public BookController(BookService bookService){
+    public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
@@ -27,15 +26,10 @@ public class BookController {
         List<Book> books = bookService.getAll();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
-
     @GetMapping("{id}")
     public ResponseEntity<Book> getById(@PathVariable Long id) {
         Optional<Book> optionalBook = bookService.getById(id);
-        if (optionalBook.isPresent()) {
-            return ResponseEntity.ok(optionalBook.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
@@ -90,12 +84,9 @@ public class BookController {
 //                                 @RequestParam(defaultValue = "0") Integer pageNo,
 //                                 @RequestParam(defaultValue = "3") Integer pageSize
     ) throws Exception {
-        List<Book> books = bookService.searchBooks(name, price, priceMin, priceMax, author);
-        return books;
+        return bookService.searchBooks(name, price, priceMin, priceMax, author);
 
     }
-
-
     @GetMapping("/search1")
     public ResponseEntity<Page<Book>> searchBooks1(@RequestParam(required = false) String name,
                                                    @RequestParam(required = false) Integer price,
@@ -107,31 +98,19 @@ public class BookController {
         Page<Book> books = bookService.searchBooks1(name, price, priceMin, priceMax, author, pageNumber, sortBy);
         return ResponseEntity.ok(books);
     }
-
-
     @PostMapping
     public ResponseEntity<Book> create(@RequestBody Book book) {
         Book saveBook = bookService.create(book);
         return ResponseEntity.ok(saveBook);
     }
-
-
     @PutMapping("{id}")
     public ResponseEntity<Book> update(@PathVariable Long id, @RequestBody Book book) {
         Optional<Book> optionalBook = Optional.ofNullable(bookService.update(id, book));
-        if (optionalBook.isPresent()) {
-            return ResponseEntity.ok(optionalBook.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-
 }

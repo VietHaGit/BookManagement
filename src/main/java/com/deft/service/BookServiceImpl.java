@@ -21,16 +21,17 @@ import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
-
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository){
+    public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
+    @Autowired
+    private EntityManager entityManager;
 
-//    @Override
+    //    @Override
 //    public void create(BookDTO dto) {
 //        Book book = new Book();
 //        book.setAuthor(dto.getAuthor());
@@ -38,7 +39,6 @@ public class BookServiceImpl implements BookService {
 //        book.setPrice(dto.getPrice());
 //        bookRepository.save(book);
 //    }
-
     @Override
     public Book create(Book book) {
         return bookRepository.save(book);
@@ -54,8 +54,6 @@ public class BookServiceImpl implements BookService {
 
         return bookRepository.findById(id);
     }
-
-
 //    @Override
 //    public List<Book> getByName(String name)
 //    {
@@ -66,24 +64,6 @@ public class BookServiceImpl implements BookService {
 //    public List<Book> Search(String name , Integer price,String author){
 //        return bookRepository.findByNameContainingAndPriceAndAuthor(name,price,author);
 //    }
-
-
-//    @Override
-//    public List<Book> searchBook(String name, Integer price, String author) {
-//        String sql = "select * from books";
-//        if(name){
-//            sql += " AND name like"
-//        }
-//        if(price){
-//            sql += "AND price ";
-//        }
-//        if(author){
-//            sql += " AND author like ";
-//        }
-
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
 //    CriteriaBuilder
@@ -120,7 +100,6 @@ public class BookServiceImpl implements BookService {
 
     }
 
-
     @Override
 //    Specification
     public Page<Book> searchBooks1(String name, Integer price, Integer priceMin, Integer priceMax, String author, int pageNumber, String sortBy) throws Exception {
@@ -149,7 +128,6 @@ public class BookServiceImpl implements BookService {
         };
         return bookRepository.findAll(specification, PageRequest.of(pageNumber, 5, Sort.by(sortBy)));
     }
-
 
     @Override
     public Book update(Long id, Book book) {

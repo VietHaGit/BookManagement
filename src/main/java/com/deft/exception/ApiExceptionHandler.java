@@ -16,14 +16,14 @@ public class ApiExceptionHandler {
         return new ErrorMessage(priceException.getCode(), priceException.getMessage(), new String[]{priceException.getField()});
     }
 
-        @Data
-        @AllArgsConstructor
-        private static class ErrorMessage {
-            private String code;
-            private String message;
-            private String[] fields;
-        }
+    @Data
+    @AllArgsConstructor
+    private static class ErrorMessage {
+        private String code;
+        private String message;
+        private String[] fields;
     }
+}
 
 
 
